@@ -8,7 +8,7 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="https://cdn.jsdelivr.net/gh/avery-gfs/images-quackathon-2025/style.css"
+      href="https://cdn.jsdelivr.net/gh/avery-gfs/images-quackathon-2025/styles.css"
     />
   </head>
   <body>
@@ -35,11 +35,11 @@
           const g = data[i + 1];
           const b = data[i + 2];
 
-          const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-          data[i] = l;
-          data[i + 1] = l;
-          data[i + 2] = l;
+          data[i] = lum;
+          data[i + 1] = lum;
+          data[i + 2] = lum;
         }
       }
 
