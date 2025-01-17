@@ -5,31 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dither</title>
-
-    <style type="text/css">
-      body {
-        margin: 0px;
-        padding: 10px;
-        display: grid;
-        grid-gap: 10px;
-      }
-
-      #images {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 10px;
-      }
-
-      img,
-      canvas {
-        width: 100%;
-        height: auto;
-      }
-
-      input {
-        max-width: 400px;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/gh/avery-gfs/images-quackathon-2025/styles.css"
+    />
   </head>
   <body>
     <div id="images">
@@ -37,42 +17,17 @@
       <canvas id="output"></canvas>
     </div>
 
-    <input type="file" id="source" accept="image/*" />
+    <form id="controls">
+      <label for="source">Select input file:</label>
+      <input type="file" name="source" accept="image/*" />
+      <label for="threshold">White threshold:</label>
+      <input type="range" name="threshold" min="0" max="255" />
+    </form>
+
+    <pre id="settings"></pre>
 
     <script type="module">
-      const $ = document.querySelector.bind(document);
-
-      const source = $("#source");
-      const img = $("#input");
-      const outputCanvas = $("#output");
-
-      const inputCanvas = document.createElement("canvas");
-
-      const inputCtx = inputCanvas.getContext("2d");
-      const outputCtx = outputCanvas.getContext("2d");
-
-      function render() {
-        const { width, height } = img;
-        inputCanvas.width = width;
-        inputCanvas.height = height;
-        outputCanvas.width = width;
-        outputCanvas.height = height;
-
-        inputCtx.drawImage(img, 0, 0, width, height);
-
-        const imageData = inputCtx.getImageData(0, 0, width, height);
-        transform(imageData);
-
-        outputCtx.putImageData(imageData, 0, 0);
-      }
-
-      img.onload = render;
-
-      function loadSrc() {
-        const reader = new FileReader();
-        reader.onload = () => (img.src = reader.result);
-        reader.readAsDataURL(source.files[0]);
-      }
+      import { attach } from "https://cdn.jsdelivr.net/gh/avery-gfs/images-quackathon-2025/main.js";
 
       const bayer = [
         [0, 8, 2, 10],
@@ -81,28 +36,27 @@
         [15, 7, 13, 5],
       ];
 
-      source.onchange = loadSrc;
-      loadSrc();
-
       function transform(imageData) {
         const { width, data } = imageData;
 
         for (let i = 0; i < data.length; i += 4) {
-          const y = Math.floor((i / 4) / width);
+          const y = Math.floor(i / 4 / width);
           const x = i / 4 - y;
 
           const r = data[i];
           const g = data[i + 1];
           const b = data[i + 2];
 
-          const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-          const bw = l * 16 / 255 < bayer[y % 4][x % 4] ? 0 : 255;
+          const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          const bw = (lum * 16) / 255 < bayer[y % 4][x % 4] ? 0 : 255;
 
           data[i] = bw;
           data[i + 1] = bw;
           data[i + 2] = bw;
         }
       }
+
+      attach(transform);
     </script>
   </body>
 </html>
