@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dither</title>
+    <title>Grayscale</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -27,31 +27,10 @@
     <script type="module">
       import { attach } from "https://cdn.jsdelivr.net/gh/avery-gfs/images-quackathon-2025/main.js";
 
-      const bayer = [
-        [0, 8, 2, 10],
-        [12, 4, 14, 6],
-        [3, 11, 1, 9],
-        [15, 7, 13, 5],
-      ];
-
-      function transform(imageData) {
-        const { width, data } = imageData;
-
-        for (let i = 0; i < data.length; i += 4) {
-          const y = Math.floor(i / 4 / width);
-          const x = i / 4 - y;
-
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-
-          const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-          const bw = (lum * 16) / 255 < bayer[y % 4][x % 4] ? 0 : 255;
-
-          data[i] = bw;
-          data[i + 1] = bw;
-          data[i + 2] = bw;
-        }
+      // https://en.wikipedia.org/wiki/Grayscale
+      
+      function transform(imageData, controls) {
+        // Your code goes here !!
       }
 
       attach(transform);
