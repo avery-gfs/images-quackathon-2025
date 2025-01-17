@@ -1,0 +1,23 @@
+body {
+  margin: 0px;
+  padding: 10px;
+  display: grid;
+  grid-gap: 10px;
+}
+
+#images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+
+img,
+canvas {
+  width: 100%;
+  height: auto;
+}
+
+#controls {
+  font-family: monospace;
+  max-width: 400px;
+}
